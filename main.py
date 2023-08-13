@@ -70,7 +70,3 @@ class ProxyChecker:
         except RequestException:
             with self.lock:
                 print(f"Proxy {proxy} doesn't work.")
-
-
-if __name__ == "__main__":
-    ProxyChecker().run("proxies.txt", 1000)
