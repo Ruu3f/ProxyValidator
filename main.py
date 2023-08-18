@@ -1,27 +1,27 @@
 """
-ProxyChecker
-The fastest and best proxy checker.
+ProxyValidator
+The fastest and best proxy validator.
 """
 
 from threading import Lock, Thread
 from requests import get, RequestException
 
 
-class ProxyChecker:
+class ProxyValidator:
     """
-    Class to check the validity of proxy servers.
+    Class to validate the validity of proxy servers.
     """
 
     def __init__(self):
         """
-        Initializes the ProxyChecker class.
+        Initializes the ProxyValidator class.
         """
-        self.checked_proxies = set()
+        self.validated_proxies = set()
         self.lock = Lock()
 
     def run(self, proxies_file, max_threads: int):
         """
-        Runs the proxy checking process.
+        Runs the proxy validation process.
 
         Args:
             proxies_file (str): Path to the file containing proxy addresses.
@@ -32,7 +32,7 @@ class ProxyChecker:
 
         threads = []
         for proxy in proxies:
-            thread = Thread(target=self.check_proxy, args=(proxy,))
+            thread = Thread(target=self.validate_proxy, args=(proxy,))
             threads.append(thread)
             thread.start()
             if len(threads) >= max_threads:
@@ -42,17 +42,17 @@ class ProxyChecker:
         for thread in threads:
             thread.join()
 
-        with open("working_proxies.txt", "a", encoding="utf-8") as file:
+        with open("validated_proxies.txt", "a", encoding="utf-8") as file:
             with self.lock:
-                for proxy in self.checked_proxies:
+                for proxy in self.validated_proxies:
                     file.write(proxy + "\n")
 
-    def check_proxy(self, proxy):
+    def validate_proxy(self, proxy):
         """
-        Checks if a proxy is working by sending a request to google.
+        Validates if a proxy is working by sending a request to google.com
 
         Args:
-            proxy (str): Proxy address to check.
+            proxy (str): Proxy address to validate.
         """
         try:
             response = get(
@@ -62,11 +62,11 @@ class ProxyChecker:
             )
             if response.status_code == 200:
                 with self.lock:
-                    print(f"Proxy {proxy} works.")
-                    self.checked_proxies.add(proxy)
+                    print(f"Proxy {proxy} is valid.")
+                    self.validated_proxies.add(proxy)
             else:
                 with self.lock:
-                    print(f"Proxy {proxy} doesn't work.")
+                    print(f"Proxy {proxy} is not valid.")
         except RequestException:
             with self.lock:
-                print(f"Proxy {proxy} doesn't work.")
+                print(f"Proxy {proxy} is not valid.")
