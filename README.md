@@ -1,5 +1,5 @@
-# ProxyChecker
-The fastest and best proxy checker.
+# ProxyValidator
+The fastest and best proxy validator.
 
 ## Support this repository:
 - ⭐ **Star the project:** Star this repository. It means a lot to me! 💕
@@ -8,7 +8,7 @@ The fastest and best proxy checker.
 ## Example:
 
 ```python
-from main import ProxyChecker
+from main import ProxyValidator
 
-ProxyChecker().run("proxies.txt", 100) # More threads, more speed.
+ProxyValidator().run("proxies.txt", 100) # More threads, more speed.
 ```
