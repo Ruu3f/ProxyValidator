@@ -1,6 +1,6 @@
 """
 ProxyValidator
-The fastest and best proxy validator.
+The fastest and best proxy validator. Supports HTTP and SOCKS.
 """
 
 from threading import Lock, Thread
@@ -45,7 +45,7 @@ class ProxyValidator:
         with open("validated_proxies.txt", "a", encoding="utf-8") as file:
             with self.lock:
                 for proxy in self.validated_proxies:
-                    file.write(proxy + "\n")
+                    file.write(f"{proxy}\n")
 
     def validate_proxy(self, proxy):
         """
@@ -57,16 +57,21 @@ class ProxyValidator:
         try:
             response = get(
                 "https://google.com/",
-                proxies={"http": proxy, "https": proxy},
+                proxies={
+                    "http": proxy,
+                    "https": proxy,
+                    "socks4": proxy,
+                    "socks5": proxy,
+                },
                 timeout=5,
             )
             if response.status_code == 200:
                 with self.lock:
-                    print(f"Proxy {proxy} is valid.")
+                    print(f"\033[32mProxy {proxy} is valid. \033[0m")
                     self.validated_proxies.add(proxy)
             else:
                 with self.lock:
-                    print(f"Proxy {proxy} is not valid.")
+                    print(f"\033[31mProxy {proxy} isn't valid.\033[0m")
         except RequestException:
             with self.lock:
-                print(f"Proxy {proxy} is not valid.")
+                print(f"\033[31mProxy {proxy} isn't valid.\033[0m")
