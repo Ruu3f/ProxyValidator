@@ -1,5 +1,5 @@
 # ProxyValidator
-The fastest and best proxy validator.
+The fastest and best proxy validator. Supports HTTP and SOCKS.
 
 ## Support this repository:
 - ⭐ **Star the project:** Star this repository. It means a lot to me! 💕
